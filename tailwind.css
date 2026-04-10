@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/* Switch dark mode from media-query to class-based strategy.
+   Without this, Tailwind v4 ignores our .dark class and uses
+   @media (prefers-color-scheme: dark) instead — which is why
+   light mode wasn't working. */
+@variant dark (&:where(.dark, .dark *));
+
+/* ─── Design Tokens ────────────────────────────────────────── */
+:root {
+    /* Sharp corners */
+    --radius-xs: 0px;
+    --radius-sm: 0px;
+    --radius-md: 0px;
+    --radius-lg: 0px;
+    --radius-xl: 0px;
+    --radius-2xl: 0px;
+    --radius-3xl: 0px;
+    --radius-full: 0px;
+
+    /* Light mode palette */
+    --color-surface: #f5f5f7;
+    --color-foreground: #1d1d1f;
+    --color-border: #e5e5e7;
+    --color-accent: #0071e3;
+    --color-whatsapp: #25d366;
+    --color-page: #ffffff;
+
+    /* Font */
+    --font-sans:
+        "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, sans-serif;
+
+    /* Transition */
+    --transition-duration: 200ms;
+    --transition-timing: ease;
+}
+
+/* Dark mode overrides — matches .dark on <html> (JS sync) or wrapper div (Tailwind) */
+.dark {
+    --color-surface: #1c1c1e;
+    --color-foreground: #f5f5f7;
+    --color-border: #2c2c2e;
+    --color-accent: #0a84ff;
+    --color-whatsapp: #30d158;
+    --color-page: #0a0a0a;
+}
+
+/* ─── Base Styles ──────────────────────────────────────────── */
+@layer base {
+    html {
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+        background-color: var(--color-page);
+        color: var(--color-foreground);
+        transition:
+            background-color 200ms ease,
+            color 200ms ease;
+    }
+
+    /* Kill all border-radius globally — sharp edges everywhere */
+    *,
+    *::before,
+    *::after {
+        border-radius: 0 !important;
+    }
+}

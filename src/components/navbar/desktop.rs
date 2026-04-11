@@ -30,7 +30,7 @@ pub fn DesktopNavbar(props: DesktopNavbarProps) -> Element {
                     class: "flex items-center gap-2 shrink-0",
                     span {
                         class: "text-base font-semibold tracking-wide text-[#1D1D1F] dark:text-[#F5F5F7] uppercase",
-                        "DAD'S STORE",
+                        "SYAR",
                     }
                 }
 

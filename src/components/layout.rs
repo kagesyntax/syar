@@ -60,7 +60,7 @@ pub fn Footer() -> Element {
             div {
                 class: "mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-10 text-xs text-[#1D1D1F]/50 dark:text-[#F5F5F7]/50 sm:flex-row",
                 div { class: "flex items-center gap-2",
-                    span { class: "font-semibold tracking-wide text-[#1D1D1F] dark:text-[#F5F5F7] uppercase text-[10px]", "DAD'S STORE" }
+                    span { class: "font-semibold tracking-wide text-[#1D1D1F] dark:text-[#F5F5F7] uppercase text-[10px]", "SYAR" }
                     span { "© 2025 — Crafted in Lagos" }
                 }
                 nav { class: "flex items-center gap-5",

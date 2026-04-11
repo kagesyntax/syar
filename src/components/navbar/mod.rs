@@ -14,18 +14,21 @@ pub struct NavbarProps {
 #[component]
 pub fn Navbar(props: NavbarProps) -> Element {
     let dark = use_context::<Signal<bool>>();
-    let search_q = use_signal(String::new);
-    let search_open = use_signal(|| false);
+    let search_q = use_context::<Signal<String>>();
+    let search_open = use_context::<Signal<bool>>();
 
     // Toggle dark mode and persist to localStorage
     let toggle_dark = move |_| {
         let next = !dark();
         let mut dark = dark;
         dark.set(next);
-        let _ = eval(if next {
-            "localStorage.setItem('theme','dark')"
-        } else {
-            "localStorage.setItem('theme','light')"
+        spawn(async move {
+            let _ = eval(if next {
+                "localStorage.setItem('theme','dark')"
+            } else {
+                "localStorage.setItem('theme','light')"
+            })
+            .await;
         });
     };
 

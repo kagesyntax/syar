@@ -11,6 +11,12 @@ pub fn Shell() -> Element {
     let wishlist_count = wishlist.read().len();
     let route: Route = use_route();
 
+    // Search state - provided at shell level so navbar and pages can access
+    let search_q = use_signal(String::new);
+    let search_open = use_signal(|| false);
+    use_context_provider(|| search_q);
+    use_context_provider(|| search_open);
+
     // Scroll to top on route change
     use_effect(move || {
         let _ = route.clone();
@@ -20,10 +26,13 @@ pub fn Shell() -> Element {
     // Sync dark class onto <html> so body CSS variables + base styles update too
     use_effect(move || {
         let is_dark = dark();
-        let _ = eval(if is_dark {
-            "document.documentElement.classList.add('dark')"
-        } else {
-            "document.documentElement.classList.remove('dark')"
+        spawn(async move {
+            let _ = eval(if is_dark {
+                "document.documentElement.classList.add('dark')"
+            } else {
+                "document.documentElement.classList.remove('dark')"
+            })
+            .await;
         });
     });
 

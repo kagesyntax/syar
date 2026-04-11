@@ -2,7 +2,7 @@ mod features;
 mod hero;
 
 use crate::components::{FilterPill, ProductCard};
-use crate::models::PRODUCTS;
+use crate::models::{Product, PRODUCTS};
 use dioxus::prelude::*;
 use features::Features;
 use hero::Hero;
@@ -10,6 +10,7 @@ use hero::Hero;
 #[component]
 pub fn Home() -> Element {
     let mut active_filter = use_signal(|| "All".to_string());
+    let search_q = use_context::<Signal<String>>();
 
     let categories = use_memo(move || {
         let mut cats: Vec<String> = vec!["All".to_string()];
@@ -22,17 +23,24 @@ pub fn Home() -> Element {
         cats
     });
 
-    let filtered = use_memo(move || {
+    let filtered: Memo<Vec<Product>> = use_memo(move || {
         let filter = active_filter();
-        if filter == "All" {
-            PRODUCTS.to_vec()
-        } else {
-            PRODUCTS
-                .iter()
-                .filter(|p| p.category == filter)
-                .cloned()
-                .collect()
-        }
+        let query = search_q().to_lowercase();
+
+        PRODUCTS
+            .iter()
+            .filter(|p| {
+                // Category filter
+                let category_match = filter == "All" || p.category == filter;
+                // Search filter
+                let search_match = query.is_empty()
+                    || p.name.to_lowercase().contains(&query)
+                    || p.category.to_lowercase().contains(&query)
+                    || p.blurb.to_lowercase().contains(&query);
+                category_match && search_match
+            })
+            .cloned()
+            .collect()
     });
 
     rsx! {

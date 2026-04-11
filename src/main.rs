@@ -22,7 +22,8 @@ fn main() {
 
 #[component]
 fn App() -> Element {
-    let mut theme = use_context::<Signal<Theme>>();
+    let mut theme = use_context_provider(|| Signal::new(Theme(false)));
+    use_context_provider(|| Signal::new(Vec::<WishlistItem>::new()));
 
     // Read saved theme preference from localStorage on mount so Rust state is correct
     use_effect(move || {
@@ -39,9 +40,6 @@ fn App() -> Element {
             }
         });
     });
-
-    use_context_provider(|| Signal::new(Theme(false)));
-    use_context_provider(|| Signal::new(Vec::<WishlistItem>::new()));
 
     rsx! {
         document::Stylesheet { href: TAILWIND_CSS }

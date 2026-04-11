@@ -27,12 +27,13 @@ fn App() -> Element {
     // Read saved theme preference from localStorage on mount so Rust state is correct
     use_effect(move || {
         spawn(async move {
-            if let Ok(val) = eval(r#"
-                localStorage.getItem("theme") === "dark" ||
-                (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)
-            "#).await
-            {
-                if val.as_bool().unwrap_or(false) {
+            let result = eval(r#"
+                (localStorage.getItem("theme") === "dark" ||
+                (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? "true" : "false"
+            "#).await;
+
+            if let Ok(val) = result {
+                if val.as_str() == Some("true") {
                     dark.set(true);
                 }
             }

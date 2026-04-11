@@ -1,3 +1,4 @@
+use crate::models::{SearchOpen, Theme};
 use crate::router::Route;
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::hi_outline_icons::{HiHeart, HiHome, HiMoon, HiSearch, HiSun, HiX};
@@ -6,7 +7,7 @@ use dioxus_free_icons::Icon;
 #[derive(Props, Clone, PartialEq)]
 pub struct MobileSearchProps {
     pub search_q: Signal<String>,
-    pub search_open: Signal<bool>,
+    pub search_open: Signal<SearchOpen>,
 }
 
 #[component]
@@ -14,7 +15,7 @@ pub fn MobileSearch(props: MobileSearchProps) -> Element {
     let mut search_q = props.search_q;
     let mut search_open = props.search_open;
 
-    if !search_open() {
+    if !search_open().0 {
         return rsx! {};
     }
 
@@ -36,7 +37,7 @@ pub fn MobileSearch(props: MobileSearchProps) -> Element {
                     onkeydown: move |e| {
                         if e.key() == Key::Escape {
                             search_q.set(String::new());
-                            search_open.set(false);
+                            search_open.set(SearchOpen(false));
                         }
                     },
                 }
@@ -44,7 +45,7 @@ pub fn MobileSearch(props: MobileSearchProps) -> Element {
                     class: "absolute right-3 top-1/2 -translate-y-1/2 text-[#1D1D1F]/40 dark:text-[#F5F5F7]/40 hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7] transition-colors duration-200",
                     onclick: move |_| {
                         search_q.set(String::new());
-                        search_open.set(false);
+                        search_open.set(SearchOpen(false));
                     },
                     Icon { width: 16, height: 16, fill: "none", icon: HiX }
                 }
@@ -56,14 +57,12 @@ pub fn MobileSearch(props: MobileSearchProps) -> Element {
 #[derive(Props, Clone, PartialEq)]
 pub struct MobileBottomNavProps {
     pub wishlist_count: usize,
-    pub dark: Signal<bool>,
+    pub theme: Signal<Theme>,
     pub toggle_dark: EventHandler<()>,
 }
 
 #[component]
 pub fn MobileBottomNav(props: MobileBottomNavProps) -> Element {
-    let dark = props.dark;
-
     rsx! {
         nav {
             class: "md:hidden fixed bottom-0 inset-x-0 z-50 border-t border-[#E5E5E7] dark:border-[#2C2C2E] bg-white/95 dark:bg-[#0A0A0A]/95 backdrop-blur-xl",
@@ -106,12 +105,12 @@ pub fn MobileBottomNav(props: MobileBottomNavProps) -> Element {
                 button {
                     class: "flex flex-col items-center justify-center gap-1 text-[#1D1D1F]/40 dark:text-[#F5F5F7]/40 hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7] transition-colors duration-200 active:scale-[0.95]",
                     onclick: move |_| props.toggle_dark.call(()),
-                    if dark() {
+                    if (*props.theme)().0 {
                         Icon { width: 20, height: 20, fill: "none", icon: HiSun }
                     } else {
                         Icon { width: 20, height: 20, fill: "none", icon: HiMoon }
                     }
-                    if dark() {
+                    if (*props.theme)().0 {
                         span { class: "text-[10px] font-medium", "Light" }
                     } else {
                         span { class: "text-[10px] font-medium", "Dark" }

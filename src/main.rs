@@ -6,7 +6,7 @@ mod models;
 mod pages;
 mod router;
 
-use models::WishlistItem;
+use models::{Theme, WishlistItem};
 use router::Route;
 
 // ─── Design System Assets ───────────────────────────────────
@@ -22,7 +22,7 @@ fn main() {
 
 #[component]
 fn App() -> Element {
-    let mut dark = use_signal(|| false);
+    let mut theme = use_context::<Signal<Theme>>();
 
     // Read saved theme preference from localStorage on mount so Rust state is correct
     use_effect(move || {
@@ -34,13 +34,13 @@ fn App() -> Element {
 
             if let Ok(val) = result {
                 if val.as_str() == Some("true") {
-                    dark.set(true);
+                    theme.set(Theme(true));
                 }
             }
         });
     });
 
-    use_context_provider(|| dark);
+    use_context_provider(|| Signal::new(Theme(false)));
     use_context_provider(|| Signal::new(Vec::<WishlistItem>::new()));
 
     rsx! {

@@ -1,3 +1,11 @@
+/// Theme context wrapper to avoid Signal<bool> type collision
+#[derive(Clone, Copy, PartialEq)]
+pub struct Theme(pub bool);
+
+/// Search visibility context wrapper to avoid Signal<bool> type collision
+#[derive(Clone, Copy, PartialEq)]
+pub struct SearchOpen(pub bool);
+
 #[derive(Clone, PartialEq, Debug)]
 pub struct Product {
     pub id: &'static str,

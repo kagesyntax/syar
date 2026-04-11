@@ -1,3 +1,4 @@
+use crate::models::{SearchOpen, Theme};
 use crate::router::Route;
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::hi_outline_icons::{HiHeart, HiMoon, HiSearch, HiSun};
@@ -6,10 +7,10 @@ use dioxus_free_icons::Icon;
 #[derive(Props, Clone, PartialEq)]
 pub struct DesktopNavbarProps {
     pub wishlist_count: usize,
-    pub dark: Signal<bool>,
+    pub theme: Signal<Theme>,
     pub toggle_dark: EventHandler<()>,
     pub search_q: Signal<String>,
-    pub search_open: Signal<bool>,
+    pub search_open: Signal<crate::models::SearchOpen>,
 }
 
 #[component]
@@ -49,7 +50,7 @@ pub fn DesktopNavbar(props: DesktopNavbarProps) -> Element {
                             onkeydown: move |e| {
                                 if e.key() == Key::Escape {
                                     search_q.set(String::new());
-                                    search_open.set(false);
+                                    search_open.set(SearchOpen(false));
                                 }
                             },
                         }
@@ -62,7 +63,10 @@ pub fn DesktopNavbar(props: DesktopNavbarProps) -> Element {
                     // Mobile search trigger
                     button {
                         class: "md:hidden flex items-center justify-center w-10 h-10 text-[#1D1D1F]/60 dark:text-[#F5F5F7]/60 transition-all duration-200 hover:-translate-y-0.5 hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7] active:scale-[0.98]",
-                        onclick: move |_| search_open.set(!search_open()),
+                        onclick: move |_| {
+                            let current = search_open().0;
+                            search_open.set(SearchOpen(!current));
+                        },
                         Icon { width: 20, height: 20, fill: "none", icon: HiSearch }
                     }
 
@@ -70,7 +74,7 @@ pub fn DesktopNavbar(props: DesktopNavbarProps) -> Element {
                     button {
                         class: "flex items-center justify-center w-10 h-10 text-[#1D1D1F]/60 dark:text-[#F5F5F7]/60 transition-all duration-200 hover:-translate-y-0.5 hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7] active:scale-[0.98]",
                         onclick: move |_| props.toggle_dark.call(()),
-                        if (props.dark)() {
+                        if (*props.theme)().0 {
                             Icon { width: 20, height: 20, fill: "none", icon: HiSun }
                         } else {
                             Icon { width: 20, height: 20, fill: "none", icon: HiMoon }

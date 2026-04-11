@@ -1,19 +1,19 @@
 use crate::components::Navbar;
-use crate::models::WishlistItem;
+use crate::models::{SearchOpen, Theme, WishlistItem};
 use crate::router::Route;
 use dioxus::document::eval;
 use dioxus::prelude::*;
 
 #[component]
 pub fn Shell() -> Element {
-    let dark = use_context::<Signal<bool>>();
+    let theme = use_context::<Signal<Theme>>();
     let wishlist = use_context::<Signal<Vec<WishlistItem>>>();
     let wishlist_count = wishlist.read().len();
     let route: Route = use_route();
 
     // Search state - provided at shell level so navbar and pages can access
     let search_q = use_signal(String::new);
-    let search_open = use_signal(|| false);
+    let search_open = use_signal(|| SearchOpen(false));
     use_context_provider(|| search_q);
     use_context_provider(|| search_open);
 
@@ -25,7 +25,7 @@ pub fn Shell() -> Element {
 
     // Sync dark class onto <html> so body CSS variables + base styles update too
     use_effect(move || {
-        let is_dark = dark();
+        let is_dark = theme().0;
         spawn(async move {
             let _ = eval(if is_dark {
                 "document.documentElement.classList.add('dark')"
@@ -37,7 +37,7 @@ pub fn Shell() -> Element {
     });
 
     rsx! {
-        div { class: if dark() { "dark" } else { "" },
+        div { class: if theme().0 { "dark" } else { "" },
             div {
                 class: "min-h-screen bg-white dark:bg-[#0A0A0A] text-[#1D1D1F] dark:text-[#F5F5F7] font-[Inter,system-ui,sans-serif] antialiased",
                 Navbar { wishlist_count }

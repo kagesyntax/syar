@@ -37,6 +37,15 @@ pub const PRODUCTS: &[Product] = &[
         in_stock: true,
     },
     Product {
+        id: "arduino-uno",
+        name: "Arduino Uno",
+        price_ngn: 40_000.0,
+        image_url: "https://res.cloudinary.com/dqga5yu1w/image/upload/v1771604720/Arduino_Uno_cmk7jg.jpg",
+        blurb: "Industry-standard ATmega328P microcontroller board. 14 digital I/O pins, 6 analog inputs, USB-B interface. Perfect for robotics, IoT, and electronics prototyping.",
+        category: "Microcontroller",
+        in_stock: true,
+    },
+    Product {
         id: "noir-chronograph",
         name: "Noir Chronograph",
         price_ngn: 475_000.0,

@@ -1,9 +1,6 @@
 [application]
-name = "syar"
-out_dir = "dist"
 
 [web.app]
-base_path = "syar"
 
 # HTML title tag content
 title = "SYAR"

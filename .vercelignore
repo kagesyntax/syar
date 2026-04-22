@@ -1,0 +1,5 @@
+# Ignore everything
+*
+
+# But allow the specific build folder
+!target/dx/SYAR/release/web/public

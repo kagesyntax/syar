@@ -21,16 +21,17 @@ jobs:
           targets: wasm32-unknown-unknown
 
       - name: Install Dioxus CLI
+        # Using --force ensures it updates if a version is already there
         run: cargo install dioxus-cli
 
       - name: Build Dioxus App
-
         run: dx build --release --platform web
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./target/dx/syar/release/web/public
+          # This is the fix! Dioxus puts everything here by default.
+          path: ./dist
 
   deploy:
     needs: build

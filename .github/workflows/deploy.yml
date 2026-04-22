@@ -21,7 +21,6 @@ jobs:
           targets: wasm32-unknown-unknown
 
       - name: Install Dioxus CLI
-        # Using --force ensures it updates if a version is already there
         run: cargo install dioxus-cli
 
       - name: Build Dioxus App
@@ -30,7 +29,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # This is the fix! Dioxus puts everything here by default.
+          # This tells GitHub to look in the 'dist' folder
+          # which is where Dioxus 0.6+ puts the files.
           path: ./dist
 
   deploy:

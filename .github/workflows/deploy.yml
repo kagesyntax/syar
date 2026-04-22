@@ -22,20 +22,20 @@ jobs:
           targets: wasm32-unknown-unknown
 
       - name: Install Dioxus CLI
-        run: cargo install dioxus-cli --force
+        # We use a specific version to ensure behavior is consistent
+        run: cargo install dioxus-cli --version 0.6.0
 
       - name: Build Dioxus App
-        # This is the command that creates the 'dist' folder
-        run: dx build --release --platform web
+        # We explicitly tell it where to put the files just in case
+        run: dx build --release --platform web --outdir dist
 
-      - name: List files for debugging
-        # If this fails, we will see exactly what folder was created
-        run: ls -F
+      - name: Check where files went
+        # This command is our insurance policy. It lists all files.
+        run: find . -maxdepth 3 -not -path '*/.*'
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Dioxus 0.6+ ALWAYS outputs to ./dist by default
           path: ./dist
 
   deploy:

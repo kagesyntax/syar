@@ -3,6 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -21,20 +22,20 @@ jobs:
           targets: wasm32-unknown-unknown
 
       - name: Install Dioxus CLI
-        run: cargo install dioxus-cli
+        run: cargo install dioxus-cli --force
 
       - name: Build Dioxus App
-        # We use --release and force the platform to web
+        # This is the command that creates the 'dist' folder
         run: dx build --release --platform web
 
-      - name: Debug Folder Structure
-        # This will show us exactly where the files are if it fails again
-        run: ls -R
+      - name: List files for debugging
+        # If this fails, we will see exactly what folder was created
+        run: ls -F
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # THIS IS THE ONLY PATH THAT WORKS FOR DIOXUS 0.6+
+          # Dioxus 0.6+ ALWAYS outputs to ./dist by default
           path: ./dist
 
   deploy:

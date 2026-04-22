@@ -1,6 +1,7 @@
 [application]
 
 [web.app]
+base_path = "syar"
 
 # HTML title tag content
 title = "SYAR"
